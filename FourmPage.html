@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Online Forum</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f2f2f2;
+    }
+
+    header {
+      background-color: #333;
+      color: #fff;
+      padding: 1rem 0;
+      text-align: center;
+    }
+
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    main {
+      padding: 2rem 0;
+    }
+
+    section {
+      background-color: #fff;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      margin-bottom: 2rem;
+    }
+
+    h2 {
+      margin-top: 0;
+    }
+
+    .chat-messages {
+      height: 300px;
+      overflow-y: auto;
+      padding: 1rem;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+
+    .chat-messages .message {
+      margin-bottom: 1rem;
+      padding: 1rem;
+      border-radius: 4px;
+      position: relative;
+      cursor: pointer;
+    }
+
+    .chat-messages .message.user {
+      background-color: #f2f2f2;
+    }
+
+    .chat-messages .message.other {
+      background-color: #eee;
+    }
+
+    .chat-messages .message .edit-delete {
+      display: flex;
+      position: absolute;
+      top: 5px;
+      right: 10px;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .chat-messages .message .edit-delete button {
+      padding: 0.3rem 0.5rem;
+      margin-left: 5px;
+      background-color: #ddd;
+      color: #333;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .chat-form {
+      display: flex;
+      align-items: center;
+      margin-top: 1rem;
+    }
+
+    .chat-form input {
+      flex-grow: 1;
+      padding: 0.5rem;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      margin-right: 1rem;
+    }
+
+    .chat-form button {
+      padding: 0.5rem 1rem;
+      background-color: #333;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    footer {
+      background-color: #333;
+      color: #fff;
+      padding: 1rem 0;
+      text-align: center;
+    }
+
+    /* Add navigation links */
+    nav {
+      background-color: #f0f0f0;
+      padding: 1rem;
+      text-align: center;
+    }
+
+    nav a {
+      color: #333;
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      margin: 0 0.5rem;
+      border-radius: 4px;
+      background-color: #fff;
+    }
+
+    nav a:hover {
+      background-color: #ddd;
+    }
+
+    nav ul {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+      display: inline-block;
+    }
+
+    nav li {
+      display: inline-block;
+      margin: 0 10px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <h1>Online Forum</h1>
+    </div>
+  </header>
+
+  <nav>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="BikePage.html">Bicycles</a></li>
+      <li><a href="RepairServicePage.html">Repair Service</a></li>
+      <li><a href="ContactPage.html">Contact</a></li>
+    </ul>
+  </nav>
+
+  <main>
+    <div class="container">
+      <section class="chat-area">
+        <h2>Chat</h2>
+        <div class="chat-messages">
+          <!-- This will be populated by JavaScript with chat messages -->
+        </div>
+        <form class="chat-form">
+          <input type="text" placeholder="Type your message..." id="message-input">
+          <button type="submit">Send</button>
+        </form>
+      </section>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2024 Online Forum</p>
+    </div>
+  </footer>
+
+  <script>
+    const chatMessages = document.querySelector('.chat-messages');
+    const messageInput = document.querySelector('#message-input');
+    const chatForm = document.querySelector('.chat-form');
+
+    window.addEventListener('load', () => {
+      const storedMessages = localStorage.getItem('messages');
+      if (storedMessages) {
+        const messages = JSON.parse(storedMessages);
+        messages.forEach(message => {
+          createMessageElement(message);
+        });
+      }
+    });
+
+    chatForm.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const messageText = messageInput.value.trim();
+      if (messageText !== '') {
+        createMessageElement(messageText);
+        messageInput.value = '';
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+        updateLocalStorage();
+      }
+    });
+
+    function createMessageElement(messageText) {
+      const messageElement = document.createElement('div');
+      messageElement.classList.add('message', 'user');
+      const messageContent = document.createElement('span');
+      messageContent.textContent = messageText;
+      messageElement.appendChild(messageContent);
+
+      const editButton = document.createElement('button');
+      editButton.textContent = 'Edit';
+      editButton.addEventListener('click', () => {
+        const originalMessage = messageContent.textContent;
+        const inputField = document.createElement('input');
+        inputField.type = 'text';
+        inputField.value = originalMessage;
+        inputField.addEventListener('keyup', (event) => {
+          if (event.key === 'Enter') {
+            saveEditedMessage(messageElement, inputField.value, editDeleteDiv);
+          }
+        });
+
+        const saveButton = document.createElement('button');
+        saveButton.textContent = 'Save';
+        saveButton.addEventListener('click', () => {
+          saveEditedMessage(messageElement, inputField.value, editDeleteDiv);
+        });
+
+        messageElement.innerHTML = '';
+        messageElement.appendChild(inputField);
+        messageElement.appendChild(saveButton);
+      });
+
+      const deleteButton = document.createElement('button');
+      deleteButton.textContent = 'Delete';
+      deleteButton.addEventListener('click', () => {
+        chatMessages.removeChild(messageElement);
+        updateLocalStorage();
+      });
+
+      const editDeleteDiv = document.createElement('div');
+      editDeleteDiv.classList.add('edit-delete');
+      editDeleteDiv.appendChild(editButton);
+      editDeleteDiv.appendChild(deleteButton);
+      messageElement.appendChild(editDeleteDiv);
+
+      chatMessages.appendChild(messageElement);
+    }
+
+    function saveEditedMessage(messageElement, newMessageText, editDeleteDiv) {
+      messageElement.innerHTML = '';
+      const messageContent = document.createElement('span');
+      messageContent.textContent = newMessageText;
+      messageElement.appendChild(messageContent);
+      messageElement.appendChild(editDeleteDiv);
+      updateLocalStorage();
+    }
+
+    function updateLocalStorage() {
+      const messages = [];
+      const messageElements = chatMessages.querySelectorAll('.message');
+      messageElements.forEach(messageElement => {
+        messages.push(messageElement.querySelector('span').textContent);
+      });
+      localStorage.setItem('messages', JSON.stringify(messages));
+    }
+
+    chatMessages.addEventListener('click', (event) => {
+      if (event.target.classList.contains('message')) {
+        event.target.querySelector('.edit-delete').style.opacity = 1;
+      }
+    });
+  </script>
+</body>
+</html>

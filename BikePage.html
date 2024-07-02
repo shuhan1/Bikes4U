@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bike Shop</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    nav ul {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      background-color: #333;
+    }
+    nav ul li {
+      margin: 0 10px;
+    }
+    nav ul li a {
+      color: white;
+      text-decoration: none;
+      padding: 10px;
+      display: block;
+    }
+    nav ul li a:hover {
+      background-color: #555;
+    }
+    .bike-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .bikes {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      width: 100%;
+    }
+    .bike {
+      width: 250px;
+      margin: 10px;
+      border: 1px solid #ccc;
+      padding: 10px;
+      text-align: center;
+      border-radius: 5px;
+    }
+    .bike img {
+      width: 200px;
+      height: 150px;
+      object-fit: cover;
+      margin-bottom: 10px;
+    }
+    .bike-details {
+      margin-bottom: 10px;
+    }
+    .bike-price {
+      font-weight: bold;
+    }
+    .basket-icon {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      font-size: 24px;
+      cursor: pointer;
+    }
+    .basket-icon:hover {
+      color: #007bff;
+    }
+    .basket-modal {
+      display: none;
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 10;
+    }
+    .basket-modal-content {
+      background-color: #fff;
+      margin: 15% auto;
+      padding: 20px;
+      border: 1px solid #888;
+      width: 80%;
+      max-width: 500px;
+      border-radius: 5px;
+    }
+    .basket-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .basket-item-name {
+      font-weight: bold;
+    }
+    .basket-item-price {
+      font-weight: bold;
+    }
+    .basket-item-remove {
+      cursor: pointer;
+      color: red;
+      font-size: 18px;
+    }
+    .checkout-button {
+      background-color: #007bff;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .checkout-button:hover {
+      background-color: #0062cc;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="BikePage.html">Bicycles</a></li>
+      <li><a href="RepairServicePage.html">Repair Service</a></li>
+      <li><a href="ForumPage.html">Forum</a></li>
+    </ul>
+  </nav>
+  <div class="bike-container">
+    <h1>Our Bikes</h1>
+    <div class="bikes">
+      <div class="bike" data-bike-name="Black Mountain Bike" data-bike-price="500">
+        <img src="bike images/BlackMountainBike.jpg" alt="BlackMountainBike">
+        <div class="bike-details">
+          <h2>Black Mountain Bike</h2>
+          <p class="bike-price">£500</p>
+        </div>
+        <button class="add-to-basket" data-bike-name="Black Mountain Bike" data-bike-price="500">Add to Basket</button>
+      </div>
+      <div class="bike" data-bike-name="Mountain Bike" data-bike-price="700">
+        <img src="bike images/MountainBike.PNG" alt="MountainBike">
+        <div class="bike-details">
+          <h2>Mountain Bike</h2>
+          <p class="bike-price">£700</p>
+        </div>
+        <button class="add-to-basket" data-bike-name="Mountain Bike" data-bike-price="700">Add to Basket</button>
+      </div>
+      <div class="bike" data-bike-name="White Rigid Bike" data-bike-price="450">
+        <img src="bike images/WhiteRigidBike.jpg" alt="WhiteRigidBike">
+        <div class="bike-details">
+          <h2>White Rigid Bike</h2>
+          <p class="bike-price">£450</p>
+        </div>
+        <button class="add-to-basket" data-bike-name="White Rigid Bike" data-bike-price="450">Add to Basket</button>
+      </div>
+      <div class="bike" data-bike-name="Brown Commuter" data-bike-price="700">
+        <img src="bike images/BrownCommuterBicylce.jpg" alt="BrownCommuterBicycle">
+        <div class="bike-details">
+          <h2>Brown Commuter</h2>
+          <p class="bike-price">£700</p>
+        </div>
+        <button class="add-to-basket" data-bike-name="Brown Commuter" data-bike-price="700">Add to Basket</button>
+      </div>
+      <div class="bike" data-bike-name="Female Beach Cruiser" data-bike-price="800">
+        <img src="bike images/FemaleBeachCruiserBicycle.jpg" alt="FemaleBeachCruiserBicycle">
+        <div class="bike-details">
+          <h2>Female Beach Cruiser</h2>
+          <p class="bike-price">£800</p>
+        </div>
+        <button class="add-to-basket" data-bike-name="Female Beach Cruiser" data-bike-price="800">Add to Basket</button>
+      </div>
+      <div class="bike" data-bike-name="Blue Rigid Bike" data-bike-price="600">
+        <img src="bike images/BlueRigidBike.jpg" alt="BlueRigidBike">
+        <div class="bike-details">
+          <h2>Blue Rigid Bike</h2>
+          <p class="bike-price">£600</p>
+        </div>
+        <button class="add-to-basket" data-bike-name="Blue Rigid Bike" data-bike-price="600">Add to Basket</button>
+      </div>
+      <div class="bike" data-bike-name="BMX Bike" data-bike-price="1500">
+        <img src="bike images/BMXBike.jpg" alt="BMXBike">
+        <div class="bike-details">
+          <h2>BMX Bike</h2>
+          <p class="bike-price">£1500</p>
+        </div>
+        <button class="add-to-basket" data-bike-name="BMX Bike" data-bike-price="1500">Add to Basket</button>
+      </div>
+      <div class="bike" data-bike-name="Green BMX Bike" data-bike-price="350">
+        <img src="bike images/GreenBMXBike.jpg" alt="GreenBMXBike">
+        <div class="bike-details">
+          <h2>Green BMX Bike</h2>
+          <p class="bike-price">£350</p>
+        </div>
+        <button class="add-to-basket" data-bike-name="Green BMX Bike" data-bike-price="350">Add to Basket</button>
+      </div>
+    </div>
+  </div>
+  <div class="basket-icon">🛒</div>
+  <div class="basket-modal">
+    <div class="basket-modal-content">
+      <h2>Your Basket</h2>
+      <div class="basket-items"></div>
+      <button class="checkout-button" onclick="window.location.href='CheckoutPage.html'">Proceed to Checkout</button>
+    </div>
+  </div>
+  <script>
+    const basketIcon = document.querySelector('.basket-icon');
+    const basketModal = document.querySelector('.basket-modal');
+    const basketItemsContainer = document.querySelector('.basket-items');
+    const addToBasketButtons = document.querySelectorAll('.add-to-basket');
+    let basket = JSON.parse(localStorage.getItem('basket')) || [];
+
+    function updateBasket() {
+      basketItemsContainer.innerHTML = '';
+      basket.forEach((item, index) => {
+        const basketItem = document.createElement('div');
+        basketItem.classList.add('basket-item');
+        basketItem.innerHTML = `
+          <span class="basket-item-name">${item.name}</span>
+          <span class="basket-item-price">£${item.price}</span>
+          <span class="basket-item-remove" onclick="removeFromBasket(${index})">🗑️</span>
+        `;
+        basketItemsContainer.appendChild(basketItem);
+      });
+    }
+
+    function addToBasket(name, price) {
+      basket.push({ name: name, price: price });
+      localStorage.setItem('basket', JSON.stringify(basket));
+      updateBasket();
+    }
+
+    function removeFromBasket(index) {
+      basket.splice(index, 1);
+      localStorage.setItem('basket', JSON.stringify(basket));
+      updateBasket();
+    }
+
+    addToBasketButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const name = button.dataset.bikeName;
+        const price = button.dataset.bikePrice;
+        addToBasket(name, price);
+      });
+    });
+
+    basketIcon.addEventListener('click', () => {
+      basketModal.style.display = 'block';
+      updateBasket();
+    });
+
+    basketModal.addEventListener('click', (event) => {
+      if (event.target === basketModal) {
+        basketModal.style.display = 'none';
+      }
+    });
+
+    updateBasket();
+  </script>
+</body>
+</html>

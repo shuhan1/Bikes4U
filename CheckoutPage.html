@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    nav ul {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      background-color: #333;
+    }
+    nav ul li {
+      margin: 0 10px;
+    }
+    nav ul li a {
+      color: white;
+      text-decoration: none;
+      padding: 10px;
+      display: block;
+    }
+    nav ul li a:hover {
+      background-color: #555;
+    }
+    .checkout-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .checkout-items {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+    }
+    .checkout-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .checkout-item-name {
+      font-weight: bold;
+    }
+    .checkout-item-price {
+      font-weight: bold;
+    }
+    .total-price {
+      font-size: 20px;
+      font-weight: bold;
+      margin-top: 20px;
+    }
+    .checkout-form {
+      width: 100%;
+      max-width: 500px;
+      margin-top: 20px;
+    }
+    .checkout-form label {
+      display: block;
+      margin-bottom: 5px;
+    }
+    .checkout-form input[type="text"],
+    .checkout-form input[type="email"],
+    .checkout-form input[type="tel"] {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    .checkout-form input[type="radio"] {
+      margin-right: 5px;
+    }
+    .checkout-form textarea {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    .checkout-button {
+      background-color: #007bff;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+    .checkout-button:hover {
+      background-color: #0062cc;
+    }
+    .success-message {
+      display: none;
+      margin-top: 20px;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      background-color: #f0f0f0;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="BikePage.html">Bicycles</a></li>
+      <li><a href="RepairServicePage.html">Repair Service</a></li>
+      <li><a href="ForumPage.html">Forum</a></li>
+    </ul>
+  </nav>
+  <div class="checkout-container">
+    <h1>Checkout</h1>
+    <div class="checkout-items"></div>
+    <div class="total-price">Total: £<span id="total-price">0</span></div>
+
+    <form class="checkout-form">
+      <h2>Payment Details</h2>
+      <label for="card-number">Card Number:</label>
+      <input type="text" id="card-number" name="card-number" placeholder="1234 5678 9012 3456">
+
+      <label for="expiry-date">Expiry Date:</label>
+      <input type="text" id="expiry-date" name="expiry-date" placeholder="MM/YY">
+
+      <label for="cvv">CVV:</label>
+      <input type="tel" id="cvv" name="cvv" placeholder="123">
+
+      <h2>Delivery Address</h2>
+      <label for="name">Full Name:</label>
+      <input type="text" id="name" name="name" placeholder="John Doe">
+
+      <label for="address">Address:</label>
+      <textarea id="address" name="address" placeholder="123 Main Street, City, State, Zip"></textarea>
+
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email" placeholder="john.doe@example.com">
+
+      <label for="phone">Phone Number:</label>
+      <input type="tel" id="phone" name="phone" placeholder="555-555-5555">
+
+      <h2>Delivery Options</h2>
+      <label for="delivery-home">Home Delivery</label>
+      <input type="radio" id="delivery-home" name="delivery-option" value="home" checked>
+
+      <label for="click-collect">Click & Collect</label>
+      <input type="radio" id="click-collect" name="delivery-option" value="click-and-collect">
+
+      <button class="checkout-button" type="submit">Place Order</button>
+
+      <div class="success-message">
+        <h2>Your order has been placed successfully!</h2>
+        <p>Thank you for your purchase. You will receive a confirmation email shortly.</p>
+      </div>
+    </form>
+  </div>
+  <script>
+    const checkoutItemsContainer = document.querySelector('.checkout-items');
+    const totalPriceSpan = document.getElementById('total-price');
+    const successMessage = document.querySelector('.success-message');
+    let basket = JSON.parse(localStorage.getItem('basket')) || [];
+    let totalPrice = 0;
+
+    function updateCheckout() {
+      checkoutItemsContainer.innerHTML = '';
+      totalPrice = 0;
+      basket.forEach(item => {
+        const checkoutItem = document.createElement('div');
+        checkoutItem.classList.add('checkout-item');
+        checkoutItem.innerHTML = `
+          <span class="checkout-item-name">${item.name}</span>
+          <span class="checkout-item-price">£${item.price}</span>
+        `;
+        checkoutItemsContainer.appendChild(checkoutItem);
+        totalPrice += parseInt(item.price);
+      });
+      totalPriceSpan.textContent = totalPrice;
+    }
+
+    updateCheckout();
+
+    // Handle form submission (you'll need to implement actual payment processing)
+    const checkoutForm = document.querySelector('.checkout-form');
+    checkoutForm.addEventListener('submit', (event) => {
+      event.preventDefault(); // Prevent default form submission
+      // Get form data here
+      // ...
+
+      // Implement your payment processing logic here
+      // ...
+
+      // After successful payment processing:
+      successMessage.style.display = 'block';
+      checkoutForm.style.display = 'none'; // Hide the form
+
+      // Clear the basket (optional)
+      localStorage.removeItem('basket');
+    });
+  </script>
+</body>
+</html>
